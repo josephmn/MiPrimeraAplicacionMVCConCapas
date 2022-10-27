@@ -6,10 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using System.Configuration;
 
 namespace Capa_Datos
 {
-    public class TipoHabitacionDAL
+    // CadenaDAL hereda de Clase CadenaDAL.cs
+    public class TipoHabitacionDAL:CadenaDAL
     {
         /*
         public List<TipoHabitacionCLS> listarTipoHabitacion()
@@ -35,13 +37,14 @@ namespace Capa_Datos
         public List<TipoHabitacionCLS> listarTipoHabitacion()
         {
             List<TipoHabitacionCLS> lista = null;
-            using (SqlConnection cn = new SqlConnection("server=ALEJANDRO-PC;database=BDHotel; Integrated Security=true"))
+            using (SqlConnection cn = new SqlConnection(cadena))
             {
                 try
                 {
                     // abro la conexion
                     cn.Open();
                     // llame al procedure
+                    //string cadena = ConfigurationManager.ConnectionStrings["cn"].ConnectionString;
                     using (SqlCommand cmd = new SqlCommand("uspListarTipoHabitacion", cn))
                     {
                         // buena practica (Opcional) -> Indicamos que es un procedure
@@ -52,12 +55,17 @@ namespace Capa_Datos
                         {
                             lista = new List<TipoHabitacionCLS>();
                             TipoHabitacionCLS oTipoHabitacionCLS;
+
+                            int posId = drd.GetOrdinal("IIDTIPOHABILITACION");
+                            int posNombre = drd.GetOrdinal("NOMBRE");
+                            int posDescripcion = drd.GetOrdinal("DESCRIPCION");
+
                             while (drd.Read())
                             {
                                 oTipoHabitacionCLS = new TipoHabitacionCLS();
-                                oTipoHabitacionCLS.id = drd.GetInt32(0);
-                                oTipoHabitacionCLS.nombre = drd.GetString(1);
-                                oTipoHabitacionCLS.descripcion = drd.GetString(2);
+                                oTipoHabitacionCLS.id = drd.GetInt32(posId);
+                                oTipoHabitacionCLS.nombre = drd.GetString(posNombre);
+                                oTipoHabitacionCLS.descripcion = drd.GetString(posDescripcion);
                                 lista.Add(oTipoHabitacionCLS);
                             }
                         }

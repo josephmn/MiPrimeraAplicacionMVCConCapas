@@ -24,6 +24,6 @@
             }
             contenido += "</table>";
             document.getElementById(objConfiguracion.id).innerHTML = contenido;
-            //alert(res)
+            alert(res)
         })
 }
